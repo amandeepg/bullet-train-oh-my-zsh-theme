@@ -265,7 +265,13 @@ prompt_git() {
   repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    prompt_segment $BULLETTRAIN_GIT_BG $BULLETTRAIN_GIT_FG
+    git_is_dirty=$(parse_git_dirty)
+    if [[ $git_is_dirty == $ZSH_THEME_GIT_PROMPT_CLEAN ]] then
+      git_bg=$BULLETTRAIN_GIT_BG
+    else
+      git_bg=yellow
+    fi
+    prompt_segment $git_bg $BULLETTRAIN_GIT_FG
 
     if [[ $BULLETTRAIN_GIT_EXTENDED == true ]] then
       echo -n $(git_prompt_info)$(git_prompt_status)
